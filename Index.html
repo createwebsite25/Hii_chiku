@@ -1,1 +1,919 @@
-h
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To My Favorite Person, Chiku ❤️</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        softblush: '#FFF0F5',
+                        blushlight: '#FFF5F7',
+                        rosegold: '#E0A96D',
+                        rosegolddark: '#B87333',
+                        burgundy: '#6B1D2F',
+                        deepburgundy: '#4A0E17',
+                        warmcream: '#FAF6F0',
+                        goldaccent: '#D4AF37',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        display: ['"Playfair Display"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2.5s infinite linear',
+                        'typewriter': 'typing 3.5s steps(40, end)',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Glassmorphism Styles */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(107, 29, 47, 0.08);
+        }
+        .glass-card-dark {
+            background: rgba(74, 14, 23, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(224, 169, 109, 0.3);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
+        }
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(224, 169, 109, 0.4);
+        }
+
+        /* Hide scrollbars for smooth aesthetic */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Interactive Envelope CSS Animation */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .envelope-flap {
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out 0.2s, z-index 0.2s ease-in-out 0.4s;
+            z-index: 5;
+        }
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        .letter-content {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, opacity 0.5s ease;
+        }
+        .envelope.open .letter-content {
+            transform: translateY(-160px);
+            z-index: 10;
+        }
+
+        /* Polaroid Effect */
+        .polaroid {
+            background: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(107, 29, 47, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .polaroid:hover {
+            transform: translateY(-8px) rotate(1deg) scale(1.02);
+            box-shadow: 0 20px 35px -10px rgba(107, 29, 47, 0.25);
+        }
+
+        /* Particle Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-softblush via-blushlight to-warmcream text-gray-800 font-sans min-h-screen relative overflow-x-hidden">
+
+    <!-- Interactive Background Particles -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Floating Audio Control & Soundscape Player -->
+    <div class="fixed top-5 right-5 z-50">
+        <div class="glass-card rounded-full p-2 pr-4 flex items-center gap-3 shadow-lg border border-rosegold/30 backdrop-blur-md">
+            <button id="audio-toggle-btn" class="w-10 h-10 rounded-full bg-gradient-to-r from-burgundy to-rosegold text-white flex items-center justify-center shadow-md hover:scale-105 transition-all">
+                <i data-lucide="music" class="w-5 h-5"></i>
+            </button>
+            <div class="flex flex-col text-xs">
+                <span class="font-medium text-burgundy flex items-center gap-1">
+                    <span id="audio-status-dot" class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
+                    <span id="audio-track-title">Romantic Piano</span>
+                </span>
+                <span class="text-[10px] text-gray-500">Ambient Soundscape</span>
+            </div>
+            <!-- Soundscape Selector -->
+            <select id="soundscape-select" class="text-xs bg-transparent border-none text-burgundy font-medium focus:outline-none cursor-pointer">
+                <option value="piano">🎹 Piano</option>
+                <option value="acoustic">🎸 Acoustic</option>
+                <option value="rain">🌧️ Rain & Keys</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/40 border-b border-rosegold/20 transition-all">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="font-display font-bold text-xl text-burgundy tracking-wide flex items-center gap-2">
+                <i data-lucide="heart" class="w-5 h-5 fill-burgundy text-burgundy animate-pulse"></i>
+                <span>Chiku & Me</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-burgundy/80">
+                <a href="#hero" class="hover:text-burgundy transition-colors">Our Journey</a>
+                <a href="#gallery" class="hover:text-burgundy transition-colors">Scrapbook</a>
+                <a href="#reasons" class="hover:text-burgundy transition-colors">100 Reasons</a>
+                <a href="#letter" class="hover:text-burgundy transition-colors">Love Letter</a>
+            </nav>
+            <button onclick="scrollToSection('letter')" class="text-xs sm:text-sm px-4 py-2 rounded-full bg-burgundy text-warmcream hover:bg-deepburgundy transition-all shadow-md hover:shadow-burgundy/20 font-medium flex items-center gap-2">
+                <i data-lucide="mail-heart" class="w-4 h-4"></i>
+                <span>Open Letter</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-24">
+
+        <!-- SECTION 1: HERO & LIVE TIMER -->
+        <section id="hero" class="min-h-[80vh] flex flex-col justify-center items-center text-center pt-8">
+            <!-- Floating Decorative Element -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rosegold/15 border border-rosegold/30 text-burgundy text-xs sm:text-sm font-medium mb-6 animate-float">
+                <i data-lucide="sparkles" class="w-4 h-4 text-goldaccent"></i>
+                <span>Together Since July 23, 2021</span>
+                <i data-lucide="sparkles" class="w-4 h-4 text-goldaccent"></i>
+            </div>
+
+            <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold text-deepburgundy leading-tight max-w-4xl tracking-tight mb-4">
+                To My Favorite Person in the World, <span class="bg-gradient-to-r from-burgundy via-rosegolddark to-burgundy bg-clip-text text-transparent italic">Chiku ❤️</span>
+            </h1>
+
+            <p class="font-serif italic text-lg sm:text-2xl text-burgundy/80 max-w-2xl mb-10 leading-relaxed font-normal">
+                "Every second with you is my favorite memory, and every moment apart is just counting down until I see your smile again."
+            </p>
+
+            <!-- Live Counter Card -->
+            <div class="w-full max-w-3xl glass-card rounded-3xl p-6 sm:p-8 border border-white/80 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-rosegold/20 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-burgundy/10 rounded-full blur-2xl"></div>
+
+                <h2 class="text-xs sm:text-sm uppercase tracking-widest text-burgundy font-semibold mb-6 flex items-center justify-center gap-2">
+                    <i data-lucide="clock" class="w-4 h-4 text-rosegolddark"></i>
+                    Time We've Been In Love
+                </h2>
+
+                <!-- Timer Grid -->
+                <div class="grid grid-cols-5 gap-2 sm:gap-4 text-center">
+                    <div class="flex flex-col p-2 sm:p-4 rounded-2xl bg-white/70 border border-rosegold/20 shadow-sm">
+                        <span id="years-count" class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-burgundy">0</span>
+                        <span class="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Years</span>
+                    </div>
+                    <div class="flex flex-col p-2 sm:p-4 rounded-2xl bg-white/70 border border-rosegold/20 shadow-sm">
+                        <span id="days-count" class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-burgundy">0</span>
+                        <span class="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Days</span>
+                    </div>
+                    <div class="flex flex-col p-2 sm:p-4 rounded-2xl bg-white/70 border border-rosegold/20 shadow-sm">
+                        <span id="hours-count" class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-burgundy">0</span>
+                        <span class="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Hours</span>
+                    </div>
+                    <div class="flex flex-col p-2 sm:p-4 rounded-2xl bg-white/70 border border-rosegold/20 shadow-sm">
+                        <span id="minutes-count" class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-burgundy">0</span>
+                        <span class="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Mins</span>
+                    </div>
+                    <div class="flex flex-col p-2 sm:p-4 rounded-2xl bg-white/70 border border-rosegold/20 shadow-sm relative">
+                        <span id="seconds-count" class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-rosegolddark animate-pulse">0</span>
+                        <span class="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">Secs</span>
+                    </div>
+                </div>
+
+                <!-- Milestone Badge Bar -->
+                <div id="milestone-badge" class="mt-6 pt-4 border-t border-rosegold/20 flex items-center justify-center gap-2 text-xs text-burgundy font-medium">
+                    <i data-lucide="award" class="w-4 h-4 text-goldaccent"></i>
+                    <span>Loading milestone stats...</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: INTERACTIVE SCRAPBOOK & TIMELINE GALLERY -->
+        <section id="gallery" class="space-y-8 scroll-mt-20">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center gap-1 text-rosegolddark text-xs uppercase tracking-widest font-semibold">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    Visual Memories
+                </div>
+                <h2 class="font-display text-3xl sm:text-5xl font-bold text-deepburgundy">Our Digital Scrapbook</h2>
+                <p class="text-gray-600 max-w-lg mx-auto text-sm sm:text-base">Moments captured in time that make my heart skip a beat.</p>
+            </div>
+
+            <!-- Category Folder Tabs & Custom Image Upload -->
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-rosegold/20 pb-4">
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto pb-2 sm:pb-0" id="gallery-tabs">
+                    <button data-category="all" class="tab-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-burgundy text-white shadow-md">All Chapter Highlights</button>
+                    <button data-category="beginning" class="tab-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-white/70 text-burgundy hover:bg-white transition-all">The Beginning (2021)</button>
+                    <button data-category="getaways" class="tab-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-white/70 text-burgundy hover:bg-white transition-all">Romantic Getaways</button>
+                    <button data-category="sweet" class="tab-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-white/70 text-burgundy hover:bg-white transition-all">Sweet Everyday</button>
+                </div>
+
+                <!-- Custom Photo Upload Button -->
+                <label class="cursor-pointer text-xs sm:text-sm bg-rosegold/20 hover:bg-rosegold/30 text-burgundy font-medium px-4 py-2 rounded-full transition-all border border-rosegold/40 flex items-center gap-2 ml-auto">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Add Memory</span>
+                    <input type="file" id="custom-photo-input" accept="image/*" class="hidden">
+                </label>
+            </div>
+
+            <!-- Polaroid Grid -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Gallery items injected dynamically by JavaScript -->
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: 100 REASONS WHY I LOVE YOU -->
+        <section id="reasons" class="space-y-8 scroll-mt-20">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center gap-1 text-rosegolddark text-xs uppercase tracking-widest font-semibold">
+                    <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+                    Endless Gratitude
+                </div>
+                <h2 class="font-display text-3xl sm:text-5xl font-bold text-deepburgundy">100 Reasons Why I Love You</h2>
+                <p class="text-gray-600 max-w-lg mx-auto text-sm sm:text-base">Just a few of the infinite reasons my heart chose you, Chiku.</p>
+            </div>
+
+            <!-- Search, Filter & Surprise Controls -->
+            <div class="glass-card rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-rosegold/30 shadow-lg">
+                <!-- Search Input -->
+                <div class="relative w-full md:w-72">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-burgundy/60"></i>
+                    <input type="text" id="reason-search" placeholder="Search reasons (e.g. smile)..." class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-full bg-white/80 border border-rosegold/30 focus:outline-none focus:ring-2 focus:ring-burgundy text-burgundy">
+                </div>
+
+                <!-- Tag Chips -->
+                <div class="flex flex-wrap items-center justify-center gap-2" id="reason-tags">
+                    <button data-tag="all" class="reason-tag px-3 py-1 text-xs rounded-full bg-burgundy text-white font-medium">#All</button>
+                    <button data-tag="YourSmile" class="reason-tag px-3 py-1 text-xs rounded-full bg-white/80 text-burgundy border border-rosegold/30 font-medium hover:bg-rosegold/20">#YourSmile</button>
+                    <button data-tag="LittleThings" class="reason-tag px-3 py-1 text-xs rounded-full bg-white/80 text-burgundy border border-rosegold/30 font-medium hover:bg-rosegold/20">#LittleThings</button>
+                    <button data-tag="Memories" class="reason-tag px-3 py-1 text-xs rounded-full bg-white/80 text-burgundy border border-rosegold/30 font-medium hover:bg-rosegold/20">#Memories</button>
+                    <button data-tag="YourKindness" class="reason-tag px-3 py-1 text-xs rounded-full bg-white/80 text-burgundy border border-rosegold/30 font-medium hover:bg-rosegold/20">#YourKindness</button>
+                    <button data-tag="FutureUs" class="reason-tag px-3 py-1 text-xs rounded-full bg-white/80 text-burgundy border border-rosegold/30 font-medium hover:bg-rosegold/20">#FutureUs</button>
+                </div>
+
+                <!-- Surprise Me Button -->
+                <button id="surprise-btn" class="w-full md:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-burgundy via-rosegolddark to-burgundy text-white font-medium text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-goldaccent"></i>
+                    <span>Surprise Me!</span>
+                </button>
+            </div>
+
+            <!-- Reasons Grid -->
+            <div id="reasons-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[600px] overflow-y-auto pr-2 no-scrollbar p-1">
+                <!-- Reasons injected dynamically -->
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: HEARTFELT LOVE LETTER WITH 3D ENVELOPE -->
+        <section id="letter" class="space-y-8 scroll-mt-20 pt-8">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center gap-1 text-rosegolddark text-xs uppercase tracking-widest font-semibold">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    Sealed With Love
+                </div>
+                <h2 class="font-display text-3xl sm:text-5xl font-bold text-deepburgundy">A Letter To My Forever</h2>
+                <p class="text-gray-600 max-w-lg mx-auto text-sm sm:text-base">Click the wax seal below to open your custom letter.</p>
+            </div>
+
+            <!-- Envelope Container -->
+            <div class="max-w-xl mx-auto envelope-wrapper py-12">
+                <div id="envelope-card" class="envelope glass-card-dark rounded-2xl p-6 sm:p-8 relative min-h-[360px] flex flex-col justify-between items-center text-center shadow-2xl border border-rosegold/40 cursor-pointer group">
+
+                    <!-- Top Flap Visual -->
+                    <div class="envelope-flap absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-burgundy to-deepburgundy border-b border-rosegold/30 rounded-t-2xl flex items-end justify-center pb-2">
+                        <div class="w-12 h-12 rounded-full bg-goldaccent shadow-md flex items-center justify-center border-2 border-amber-200 cursor-pointer group-hover:scale-110 transition-transform">
+                            <i data-lucide="heart" class="w-6 h-6 text-burgundy fill-burgundy"></i>
+                        </div>
+                    </div>
+
+                    <!-- Envelope Front Prompt -->
+                    <div id="envelope-prompt" class="my-auto space-y-3 z-10 pt-12">
+                        <span class="text-goldaccent uppercase text-xs tracking-widest font-semibold">For My Dearest Chiku</span>
+                        <h3 class="font-display text-2xl text-warmcream">Click to Break the Seal & Read</h3>
+                        <p class="text-rosegold text-xs">Written with all my heart & soul</p>
+                    </div>
+
+                    <!-- Letter Content inside Envelope (Expands/Shown) -->
+                    <div id="letter-body" class="letter-content hidden w-full bg-warmcream text-gray-800 rounded-xl p-6 sm:p-8 text-left shadow-2xl space-y-4 font-serif text-base sm:text-lg leading-relaxed border border-rosegold/30">
+                        <div class="flex justify-between items-center border-b border-rosegold/20 pb-3">
+                            <span class="font-display font-bold text-burgundy text-xl">Dearest Chiku,</span>
+                            <span class="text-xs text-rosegolddark font-sans">July 23, 2021 – Forever</span>
+                        </div>
+
+                        <p class="text-gray-700 italic">
+                            Looking back at July 23, 2021, I had no idea that my entire world was about to change for the better. You walked into my life and suddenly everything became brighter, warmer, and endlessly beautiful.
+                        </p>
+
+                        <p class="text-gray-700">
+                            Thank you for being my anchor when times are tough, my biggest cheerleader in every victory, and my favorite conversation at the end of every day. Your laughter is my favorite sound, and your happiness will always be my life's greatest mission.
+                        </p>
+
+                        <p class="text-gray-700">
+                            As we turn each page of our digital scrapbook together, remember that no matter how many miles we travel or years that pass, my heart will always belong to you.
+                        </p>
+
+                        <div class="pt-4 border-t border-rosegold/20 flex justify-between items-end">
+                            <div>
+                                <p class="text-xs text-gray-500 font-sans uppercase">With endless love,</p>
+                                <p class="font-display font-bold text-burgundy text-xl">Yours Always ❤️</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-rosegold/20 flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-5 h-5 text-burgundy"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-8 border-t border-rosegold/20 text-xs sm:text-sm text-burgundy/70 space-y-2">
+            <p class="font-display text-base font-semibold text-burgundy">Made with all my love for Chiku ❤️</p>
+            <p>Designed as our eternal digital scrapbook • Every moment counts</p>
+        </footer>
+
+    </main>
+
+    <!-- LIGHTBOX MODAL FOR PHOTO GALLERY -->
+    <div id="photo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all">
+        <div class="relative max-w-3xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+            <button id="close-photo-modal" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="md:w-3/5 bg-black flex items-center justify-center overflow-hidden">
+                <img id="modal-img" src="" alt="Memory preview" class="w-full h-full object-contain">
+            </div>
+            <div class="md:w-2/5 p-6 flex flex-col justify-between bg-warmcream space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span id="modal-date" class="text-xs font-semibold uppercase tracking-wider text-rosegolddark bg-rosegold/10 px-3 py-1 rounded-full">Date</span>
+                        <button id="modal-heart-btn" class="text-gray-400 hover:text-burgundy transition-colors">
+                            <i data-lucide="heart" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <h3 id="modal-title" class="font-display font-bold text-2xl text-deepburgundy">Memory Title</h3>
+                    <p id="modal-desc" class="text-gray-600 text-sm leading-relaxed font-sans">Memory description goes here.</p>
+                </div>
+                <div class="pt-4 border-t border-rosegold/20 flex items-center justify-between text-xs text-burgundy/80">
+                    <span>Chapter: <strong id="modal-category">General</strong></span>
+                    <span class="flex items-center gap-1"><i data-lucide="smile" class="w-4 h-4 text-rosegolddark"></i> Unforgettable</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SURPRISE REASON MODAL -->
+    <div id="surprise-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="relative max-w-md w-full glass-card rounded-3xl p-8 text-center space-y-6 border border-white shadow-2xl animate-float">
+            <button id="close-surprise-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-burgundy/10 text-burgundy flex items-center justify-center hover:bg-burgundy/20">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-burgundy to-rosegold text-white flex items-center justify-center mx-auto shadow-lg">
+                <i data-lucide="gift" class="w-8 h-8"></i>
+            </div>
+
+            <div class="space-y-2">
+                <span id="surprise-number" class="text-xs font-semibold tracking-widest text-rosegolddark uppercase">Reason #00</span>
+                <h3 id="surprise-text" class="font-display text-2xl text-deepburgundy font-bold">"Your smile brightens up my darkest days."</h3>
+                <span id="surprise-tag" class="inline-block text-xs px-3 py-1 rounded-full bg-burgundy/10 text-burgundy font-medium">#YourSmile</span>
+            </div>
+
+            <button onclick="triggerSurpriseModal()" class="px-6 py-2.5 rounded-full bg-burgundy text-white text-xs font-medium hover:bg-deepburgundy transition-all shadow-md">
+                Another Random Reason ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // -------------------------------------------------------------
+        // 1. LIVE COUNT-UP TIMER LOGIC
+        // -------------------------------------------------------------
+        const startDate = new Date('2021-07-23T00:00:00');
+
+        function updateCounter() {
+            const now = new Date();
+            const diffMs = now - startDate;
+
+            if (diffMs < 0) return;
+
+            const secondsTotal = Math.floor(diffMs / 1000);
+            const minutesTotal = Math.floor(secondsTotal / 60);
+            const hoursTotal = Math.floor(minutesTotal / 60);
+            const daysTotal = Math.floor(hoursTotal / 24);
+
+            const years = Math.floor(daysTotal / 365.25);
+            const days = Math.floor(daysTotal % 365.25);
+            const hours = hoursTotal % 24;
+            const minutes = minutesTotal % 60;
+            const seconds = secondsTotal % 60;
+
+            document.getElementById('years-count').innerText = years;
+            document.getElementById('days-count').innerText = days;
+            document.getElementById('hours-count').innerText = hours;
+            document.getElementById('minutes-count').innerText = minutes;
+            document.getElementById('seconds-count').innerText = seconds;
+
+            // Update Milestone Badge Text
+            const milestoneBadge = document.getElementById('milestone-badge');
+            milestoneBadge.innerHTML = `<i data-lucide="award" class="w-4 h-4 text-goldaccent"></i> <span>Over ${daysTotal.toLocaleString()} days of loving Chiku & creating memories together!</span>`;
+            lucide.createIcons();
+        }
+
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // -------------------------------------------------------------
+        // 2. SCRAPBOOK & PHOTO GALLERY DATA & LOGIC
+        // -------------------------------------------------------------
+        const galleryData = [
+            {
+                id: 1,
+                title: "The First Day We Met",
+                date: "July 23, 2021",
+                category: "beginning",
+                desc: "The day my entire world turned soft and bright. The start of everything good in my life.",
+                img: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                title: "Sunset Strolls & Coffee",
+                date: "October 14, 2021",
+                category: "beginning",
+                desc: "Holding hands under twilight skies, talking for hours until the stars came out.",
+                img: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 3,
+                title: "Our Weekend Gateway",
+                date: "June 12, 2022",
+                category: "getaways",
+                desc: "Escaping the noisy city to find quiet comfort in each other's arms.",
+                img: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 4,
+                title: "Cozy Rainy Afternoon",
+                date: "November 05, 2022",
+                category: "sweet",
+                desc: "Warm blankets, hot tea, and you falling asleep on my shoulder.",
+                img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 5,
+                title: "Beach Sunrise Adventure",
+                date: "March 20, 2023",
+                category: "getaways",
+                desc: "Watching the golden sun paint the waves, knowing I already found my paradise.",
+                img: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 6,
+                title: "Unconditional Smiles",
+                date: "Today & Forever",
+                category: "sweet",
+                desc: "Your laughter remains my favorite melody, today and for all the tomorrows to come.",
+                img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        function renderGallery(filter = 'all') {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            const filteredData = filter === 'all' ? galleryData : galleryData.filter(item => item.category === filter);
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'polaroid rounded-2xl p-4 cursor-pointer group flex flex-col justify-between';
+                card.onclick = () => openPhotoModal(item);
+
+                card.innerHTML = `
+                    <div class="relative overflow-hidden rounded-xl aspect-[4/3] bg-gray-100 mb-4">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-burgundy/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                            <span class="text-xs text-white font-medium flex items-center gap-1">
+                                <i data-lucide="maximize-2" class="w-3 h-3"></i> Expand Memory
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between text-[11px] text-rosegolddark font-semibold uppercase tracking-wider mb-1">
+                            <span>${item.date}</span>
+                            <i data-lucide="heart" class="w-3.5 h-3.5 text-burgundy/50 group-hover:text-burgundy group-hover:fill-burgundy transition-all"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-burgundy text-lg group-hover:text-deepburgundy transition-colors">${item.title}</h3>
+                        <p class="text-xs text-gray-500 line-clamp-2 mt-1">${item.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Tab Filter Click Handlers
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('bg-burgundy', 'text-white', 'shadow-md');
+                    b.classList.add('bg-white/70', 'text-burgundy');
+                });
+                e.target.classList.remove('bg-white/70', 'text-burgundy');
+                e.target.classList.add('bg-burgundy', 'text-white', 'shadow-md');
+
+                const cat = e.target.getAttribute('data-category');
+                renderGallery(cat);
+            });
+        });
+
+        // Photo Lightbox Functions
+        function openPhotoModal(item) {
+            document.getElementById('modal-img').src = item.img;
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-date').innerText = item.date;
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-category').innerText = item.category;
+            document.getElementById('photo-modal').classList.remove('hidden');
+        }
+
+        document.getElementById('close-photo-modal').onclick = () => {
+            document.getElementById('photo-modal').classList.add('hidden');
+        };
+
+        // Custom Photo Upload Handler
+        document.getElementById('custom-photo-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const newMemory = {
+                        id: Date.now(),
+                        title: "Custom Memory with Chiku",
+                        date: "Just Now",
+                        category: "sweet",
+                        desc: "A beautiful newly added memory to our eternal digital scrapbook.",
+                        img: event.target.result
+                    };
+                    galleryData.unshift(newMemory);
+                    renderGallery('all');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // -------------------------------------------------------------
+        // 3. 100 REASONS WHY I LOVE YOU DATA & LOGIC
+        // -------------------------------------------------------------
+        const reasonCategories = ["YourSmile", "LittleThings", "Memories", "YourKindness", "FutureUs"];
+        const baseReasons = [
+            { text: "The way your eyes light up whenever you talk about things you love.", tag: "YourSmile" },
+            { text: "How you make even quiet silence feel comforting and cozy.", tag: "LittleThings" },
+            { text: "Your warm laugh that instantly dispels my stressed days.", tag: "YourSmile" },
+            { text: "How gentle and compassionate you are to everyone around you.", tag: "YourKindness" },
+            { text: "The way you hold my hand like you never want to let go.", tag: "LittleThings" },
+            { text: "All our late-night conversations that make time fly by.", tag: "Memories" },
+            { text: "The cute expressions you make when you are focused.", tag: "LittleThings" },
+            { text: "How safe and complete I feel whenever I am with you.", tag: "FutureUs" },
+            { text: "Your unwavering support in all my dreams and aspirations.", tag: "YourKindness" },
+            { text: "The way you remember small details about me that I forgot.", tag: "LittleThings" },
+            { text: "Your soft smile when you wake up or greet me.", tag: "YourSmile" },
+            { text: "Dreaming about building our bright future together.", tag: "FutureUs" },
+        ];
+
+        // Generate full 100 reasons dynamically
+        const reasonsList = [];
+        for (let i = 1; i <= 100; i++) {
+            if (i <= baseReasons.length) {
+                reasonsList.push({ id: i, ...baseReasons[i - 1] });
+            } else {
+                const tag = reasonCategories[i % reasonCategories.length];
+                let text = "";
+                switch (tag) {
+                    case "YourSmile":
+                        text = `Reason #${i}: The radiant glow in your smile that makes my entire world bright.`;
+                        break;
+                    case "LittleThings":
+                        text = `Reason #${i}: The sweet, subtle ways you show love without saying a single word.`;
+                        break;
+                    case "Memories":
+                        text = `Reason #${i}: Every single chapter and unwritten memory we've shared since July 2021.`;
+                        break;
+                    case "YourKindness":
+                        text = `Reason #${i}: Your boundless empathy, warmth, and giant heart.`;
+                        break;
+                    case "FutureUs":
+                        text = `Reason #${i}: Knowing that every tomorrow is brighter because you are in it.`;
+                        break;
+                }
+                reasonsList.push({ id: i, text, tag });
+            }
+        }
+
+        function renderReasons(tagFilter = 'all', searchQuery = '') {
+            const grid = document.getElementById('reasons-grid');
+            grid.innerHTML = '';
+
+            const filtered = reasonsList.filter(r => {
+                const matchesTag = tagFilter === 'all' || r.tag === tagFilter;
+                const matchesSearch = r.text.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesTag && matchesSearch;
+            });
+
+            filtered.forEach(r => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl p-4 border border-rosegold/20 hover:border-burgundy/40 transition-all shadow-sm hover:shadow-md flex flex-col justify-between space-y-3';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-rosegolddark tracking-wider uppercase bg-rosegold/10 px-2 py-0.5 rounded-full">#${r.id}</span>
+                        <span class="text-[10px] text-burgundy/60 font-medium">#${r.tag}</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-700 leading-snug font-sans">"${r.text}"</p>
+                    <div class="flex justify-end">
+                        <i data-lucide="heart" class="w-3.5 h-3.5 text-rosegold hover:text-burgundy hover:fill-burgundy cursor-pointer transition-colors"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Search & Filter Event Handlers
+        document.getElementById('reason-search').addEventListener('input', (e) => {
+            const activeTag = document.querySelector('.reason-tag.bg-burgundy').getAttribute('data-tag');
+            renderReasons(activeTag, e.target.value);
+        });
+
+        document.querySelectorAll('.reason-tag').forEach(tagBtn => {
+            tagBtn.addEventListener('click', (e) => {
+                document.querySelectorAll('.reason-tag').forEach(b => {
+                    b.classList.remove('bg-burgundy', 'text-white');
+                    b.classList.add('bg-white/80', 'text-burgundy');
+                });
+                e.target.classList.remove('bg-white/80', 'text-burgundy');
+                e.target.classList.add('bg-burgundy', 'text-white');
+
+                const selectedTag = e.target.getAttribute('data-tag');
+                const searchVal = document.getElementById('reason-search').value;
+                renderReasons(selectedTag, searchVal);
+            });
+        });
+
+        // Surprise Me Random Reason
+        function triggerSurpriseModal() {
+            const randomReason = reasonsList[Math.floor(Math.random() * reasonsList.length)];
+            document.getElementById('surprise-number').innerText = `Reason #${randomReason.id}`;
+            document.getElementById('surprise-text').innerText = `"${randomReason.text}"`;
+            document.getElementById('surprise-tag').innerText = `#${randomReason.tag}`;
+            document.getElementById('surprise-modal').classList.remove('hidden');
+
+            // Trigger temporary heart burst
+            createHeartBurst();
+        }
+
+        document.getElementById('surprise-btn').onclick = triggerSurpriseModal;
+        document.getElementById('close-surprise-modal').onclick = () => {
+            document.getElementById('surprise-modal').classList.add('hidden');
+        };
+
+        // -------------------------------------------------------------
+        // 4. INTERACTIVE LOVE LETTER ENVELOPE LOGIC
+        // -------------------------------------------------------------
+        const envelopeCard = document.getElementById('envelope-card');
+        const letterBody = document.getElementById('letter-body');
+        const envelopePrompt = document.getElementById('envelope-prompt');
+
+        envelopeCard.addEventListener('click', function() {
+            if (!this.classList.contains('open')) {
+                this.classList.add('open');
+                envelopePrompt.classList.add('hidden');
+                letterBody.classList.remove('hidden');
+            }
+        });
+
+        // Smooth Scroll Helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // -------------------------------------------------------------
+        // 5. CANVAS PARTICLES & HEART ANIMATION
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class HeartParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.size = Math.random() * 12 + 6;
+                this.speedY = Math.random() * 1.2 + 0.5;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                this.color = Math.random() > 0.5 ? '#E0A96D' : '#6B1D2F';
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += Math.sin(this.y * 0.02) * 0.5;
+                if (this.y < -20) this.reset();
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                const d = this.size;
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - d / 2, this.y - d / 2, this.x - d, this.y + d / 3, this.x, this.y + d);
+                ctx.bezierCurveTo(this.x + d, this.y + d / 3, this.x + d / 2, this.y - d / 2, this.x, this.y);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 25; i++) {
+            particles.push(new HeartParticle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        function createHeartBurst() {
+            for (let i = 0; i < 15; i++) {
+                const p = new HeartParticle();
+                p.x = window.innerWidth / 2;
+                p.y = window.innerHeight / 2;
+                p.speedY = (Math.random() - 0.5) * 4;
+                p.speedX = (Math.random() - 0.5) * 4;
+                particles.push(p);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 6. SYNTHESIZED WEB AUDIO SOUNDSCAPE GENERATOR
+        // -------------------------------------------------------------
+        let audioCtx = null;
+        let isPlaying = false;
+        let audioInterval = null;
+
+        const audioBtn = document.getElementById('audio-toggle-btn');
+        const statusDot = document.getElementById('audio-status-dot');
+        const trackTitle = document.getElementById('audio-track-title');
+        const soundscapeSelect = document.getElementById('soundscape-select');
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playChordNote(freq, type = 'sine', duration = 2.5) {
+            if (!audioCtx || !isPlaying) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.3);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // Simple Ambient Chords Sequence (Cmaj7 -> Am7 -> Fmaj7 -> G)
+        const notes = [261.63, 329.63, 392.00, 493.88, 220.00, 349.23, 392.00];
+
+        function startSoundscape() {
+            initAudio();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            isPlaying = true;
+            statusDot.classList.remove('bg-gray-400');
+            statusDot.classList.add('bg-green-500');
+
+            let step = 0;
+            audioInterval = setInterval(() => {
+                const currentType = soundscapeSelect.value === 'acoustic' ? 'triangle' : 'sine';
+                playChordNote(notes[step % notes.length], currentType, 3.0);
+                playChordNote(notes[(step + 2) % notes.length] / 2, currentType, 4.0);
+                step++;
+            }, 1800);
+        }
+
+        function stopSoundscape() {
+            isPlaying = false;
+            if (audioInterval) clearInterval(audioInterval);
+            statusDot.classList.remove('bg-green-500');
+            statusDot.classList.add('bg-gray-400');
+        }
+
+        audioBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopSoundscape();
+            } else {
+                startSoundscape();
+            }
+        });
+
+        soundscapeSelect.addEventListener('change', (e) => {
+            const selected = e.target.value;
+            if (selected === 'piano') trackTitle.innerText = "Romantic Piano";
+            if (selected === 'acoustic') trackTitle.innerText = "Acoustic Tone";
+            if (selected === 'rain') trackTitle.innerText = "Rain & Keys";
+        });
+
+        // Initialize Page Defaults
+        window.onload = function() {
+            renderGallery('all');
+            renderReasons('all', '');
+        };
+    </script>
+</body>
+</html>
